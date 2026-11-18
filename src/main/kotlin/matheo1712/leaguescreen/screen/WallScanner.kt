@@ -65,6 +65,7 @@ object WallScanner {
         val height = maxY - minY + 1
 
         if (width > WallRect.MAX_WIDTH || height > WallRect.MAX_HEIGHT) return null
+
         // Un rectangle plein a exactement largeur × hauteur blocs : un trou ou un L en a moins.
         if (visited.size != width * height) return null
 
