@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "cobblemon-league-screen",
+  "version": "${version}",
+  "name": "Cobblemon League Screen",
+  "description": "Un écran de ligue en blocs qui suit un combat Cobblemon en direct.",
+  "authors": [
+    "matheo1712"
+  ],
+  "contact": {},
+  "license": "LicenseRef-All-Rights-Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "value": "matheo1712.leaguescreen.LeagueScreen",
+        "adapter": "kotlin"
+      }
+    ],
+    "client": [
+      {
+        "value": "matheo1712.leaguescreen.client.LeagueScreenClient",
+        "adapter": "kotlin"
+      }
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*",
+    "fabric-language-kotlin": "*",
+    "cobblemon": ">=1.8.0"
+  },
+  "suggests": {
+    "cobblemon-trainers": ">=2.0.0"
+  }
+}
