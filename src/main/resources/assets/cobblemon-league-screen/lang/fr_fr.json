@@ -1,11 +1,11 @@
 {
-  "block.cobblemon-league-screen.screen": "Écran de ligue",
+  "block.cobblemon-league-screen.screen": "Écran de combat",
   "block.cobblemon-league-screen.terminal": "Borne d'enregistrement",
   "message.cobblemon-league-screen.linked": "Écran relié (%s/%s)",
   "message.cobblemon-league-screen.too_far": "Trop loin de l'écran relié (%s blocs au plus, même dimension)",
   "message.cobblemon-league-screen.no_wall": "Cette borne n'est reliée à aucun écran valide",
   "tooltip.cobblemon-league-screen.linked": "Écrans reliés : %s",
-  "tooltip.cobblemon-league-screen.unlinked": "Non reliée : clic droit sur un écran de ligue",
+  "tooltip.cobblemon-league-screen.unlinked": "Non reliée : clic droit sur un écran de combat",
   "message.cobblemon-league-screen.follow": "L'écran affiche maintenant ce combat",
   "message.cobblemon-league-screen.already_followed": "L'écran affiche déjà ce combat",
   "message.cobblemon-league-screen.not_in_battle": "Lance ton combat, puis reviens cliquer sur la borne",
@@ -48,5 +48,5 @@
   "screen.cobblemon-league-screen.wall_too_far": "trop loin",
   "screen.cobblemon-league-screen.wall_unloaded": "pas chargé",
   "screen.cobblemon-league-screen.unlink": "Retirer",
-  "itemGroup.cobblemon-league-screen.main": "Écran de ligue"
+  "itemGroup.cobblemon-league-screen.main": "Écran de combat"
 }
