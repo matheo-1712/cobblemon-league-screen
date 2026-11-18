@@ -1,5 +1,8 @@
 package matheo1712.leaguescreen.block
 
+import ARENA
+import THEME
+import WALLS
 import matheo1712.leaguescreen.arena.ArenaSettings
 import matheo1712.leaguescreen.arena.ArenaTerminals
 import matheo1712.leaguescreen.registry.ModBlocks
@@ -147,12 +150,5 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
         arena = if (tag.contains(ARENA)) ArenaSettings.fromTag(tag.getCompound(ARENA)) else ArenaSettings.DEFAULT
         theme = ResourceLocation.tryParse(tag.getString(THEME)).takeIf { tag.contains(THEME) } ?: Couronne.id
         announce()
-    }
-
-    companion object {
-        private const val WALLS = "walls"
-        private const val ARENA = "arena"
-        private const val THEME = "theme"
-        private const val LEGACY_WALL = "linked_wall"
     }
 }
