@@ -59,7 +59,6 @@ class BattleRecord(val battleId: UUID, val sides: List<SideRecord>) {
     fun stateOf(side: Int, index: Int): SlotState {
         val pokemon = sides.getOrNull(side)?.team?.getOrNull(index) ?: return SlotState.EMPTY
         return when (pokemon) {
-            // Un Pokémon K.O. peut rester un instant « actif » avant son remplacement : K.O. l'emporte.
             in fainted -> SlotState.FAINTED
             in active -> SlotState.ACTIVE
             in sent -> SlotState.BENCH

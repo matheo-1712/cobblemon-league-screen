@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "cobblemon-league-screen:block/terminal"
+    },
+    "facing=east": {
+      "model": "cobblemon-league-screen:block/terminal",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "cobblemon-league-screen:block/terminal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "cobblemon-league-screen:block/terminal",
+      "y": 270
+    }
+  }
+}
