@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "cobblemon-league-screen:block/screen_side",
+    "side": "cobblemon-league-screen:block/screen_side",
+    "front": "cobblemon-league-screen:block/screen_front"
+  }
+}
