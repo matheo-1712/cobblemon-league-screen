@@ -1,6 +1,7 @@
 package matheo1712.leaguescreen.client
 
 import matheo1712.leaguescreen.LeagueScreen
+import matheo1712.leaguescreen.client.render.BakedWalls
 import matheo1712.leaguescreen.client.render.PokemonModels
 import matheo1712.leaguescreen.client.render.PortraitPainter
 import matheo1712.leaguescreen.client.theme.ClientThemes
@@ -27,6 +28,7 @@ object LeagueScreenClient : ClientModInitializer {
     override fun onInitializeClient() {
         BlockEntityRenderers.register(ModBlocks.SCREEN_ENTITY, ::ScreenWallRenderer)
         ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
+            BakedWalls.clear()
             PokemonModels.clear()
             ClientThemes.clear()
             ThemeTextures.clear()

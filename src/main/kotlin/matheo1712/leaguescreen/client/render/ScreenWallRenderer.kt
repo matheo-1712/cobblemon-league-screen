@@ -5,14 +5,17 @@ import com.mojang.math.Axis
 import matheo1712.leaguescreen.block.ScreenBlockEntity
 import matheo1712.leaguescreen.board.Phase
 import matheo1712.leaguescreen.client.theme.ClientThemes
+import matheo1712.leaguescreen.theme.ThemeGeometry
 import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 
 /**
  * Le rendu d'un mur entier, attaché à son bloc de contrôle (le coin bas gauche vu de face).
  *
- * Il place le repère du [WallCanvas] puis laisse [ThemePainter] dessiner le thème du mur.
+ * Le tableau est dessiné une fois dans une texture par [BakedWalls], seulement quand il change ;
+ * ici, on ne pose plus que cette texture sur la face du mur.
  */
 class ScreenWallRenderer(context: BlockEntityRendererProvider.Context) : BlockEntityRenderer<ScreenBlockEntity> {
 
@@ -26,7 +29,12 @@ class ScreenWallRenderer(context: BlockEntityRendererProvider.Context) : BlockEn
     ) {
         val wall = blockEntity.wall ?: return
         val board = blockEntity.board
-        if (board.phase == Phase.OFF) return
+        if (board.phase == Phase.OFF) {
+            BakedWalls.forget(blockEntity)
+            return
+        }
+        val theme = ClientThemes.forWall(blockEntity.theme)
+        val texture = BakedWalls.textureFor(blockEntity, wall.width, wall.height, board, theme)
 
         poseStack.pushPose()
         // Tourne le bloc pour que +z sorte de la dalle et +x aille vers la droite du spectateur,
@@ -34,8 +42,16 @@ class ScreenWallRenderer(context: BlockEntityRendererProvider.Context) : BlockEn
         poseStack.translate(0.5, 0.0, 0.5)
         poseStack.mulPose(Axis.YP.rotationDegrees(-wall.facing.toYRot()))
         poseStack.translate(-0.5, 0.0, 0.5)
-        val theme = ClientThemes.forWall(blockEntity.theme)
-        ThemePainter.paint(poseStack, bufferSource, wall.width.toFloat(), wall.height.toFloat(), board, theme, partialTick)
+        val matrix = poseStack.last().pose()
+        val consumer = bufferSource.getBuffer(RenderType.text(texture))
+        val w = wall.width.toFloat()
+        val h = wall.height.toFloat()
+        val z = ThemeGeometry.BACKGROUND_Z
+        // La texture a son origine en bas à gauche, comme le repère du mur.
+        consumer.addVertex(matrix, 0f, 0f, z).setColor(Colors.WHITE).setUv(0f, 0f).setLight(WallCanvas.LIGHT)
+        consumer.addVertex(matrix, w, 0f, z).setColor(Colors.WHITE).setUv(1f, 0f).setLight(WallCanvas.LIGHT)
+        consumer.addVertex(matrix, w, h, z).setColor(Colors.WHITE).setUv(1f, 1f).setLight(WallCanvas.LIGHT)
+        consumer.addVertex(matrix, 0f, h, z).setColor(Colors.WHITE).setUv(0f, 1f).setLight(WallCanvas.LIGHT)
         poseStack.popPose()
     }
 

@@ -46,17 +46,24 @@ object PortraitPainter {
         val cx = inner.x + inner.width / 2
         val cy = inner.y + inner.height / 2
         val side = min(inner.width, inner.height)
-        val skin = when (portrait.kind) {
-            PortraitKind.PLAYER -> playerSkin(portrait.id)
-            PortraitKind.TEXTURE -> ResourceLocation.tryParse(portrait.id)?.takeIf(ThemeTextures::exists)
-            PortraitKind.TRAINER -> trainerSkin(portrait.id)
-            PortraitKind.NONE -> null
-        }
+        val skin = skinOf(portrait)
         if (skin == null) {
             canvas.texture(SILHOUETTE, cx, cy, side * 0.9f, side * 0.9f, Colors.withAlpha(frame, 0.85f), z + ThemeGeometry.SUB_STEP)
         } else {
             bust(canvas, skin, cx, cy, side, z + ThemeGeometry.SUB_STEP)
         }
+    }
+
+    /**
+     * Le skin à dessiner dans ce cadre, ou `null` pour la silhouette. Il peut changer avec le temps
+     * (un skin de joueur qui finit de se télécharger) : [BakedWalls] s'en sert pour savoir quand
+     * redessiner le tableau.
+     */
+    fun skinOf(portrait: Portrait): ResourceLocation? = when (portrait.kind) {
+        PortraitKind.PLAYER -> playerSkin(portrait.id)
+        PortraitKind.TEXTURE -> ResourceLocation.tryParse(portrait.id)?.takeIf(ThemeTextures::exists)
+        PortraitKind.TRAINER -> trainerSkin(portrait.id)
+        PortraitKind.NONE -> null
     }
 
     /** Le skin d'un joueur que le client connaît ; le skin par défaut sinon. */
