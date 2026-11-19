@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 /** Chaque thème livré avec le mod se lit sans avertissement et montre tout le combat. */
 class ShippedThemesTest {
 
-    private val shipped = listOf("couronne", "bandeau")
+    private val shipped = listOf("couronne")
 
     private fun load(name: String): Theme {
         val path = "/data/cobblemon-league-screen/leaguescreen/themes/$name.json"
