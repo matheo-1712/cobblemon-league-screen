@@ -34,8 +34,15 @@ object FigurePainter {
     /** Dans l'espace du modèle, les pieds sont à 1,5 bloc sous son origine (comme dans le rendu des entités). */
     private const val FEET = 1.501f
 
-    private val wide by lazy { PlayerModel<LivingEntity>(Minecraft.getInstance().entityModels.bakeLayer(ModelLayers.PLAYER), false) }
-    private val slim by lazy { PlayerModel<LivingEntity>(Minecraft.getInstance().entityModels.bakeLayer(ModelLayers.PLAYER_SLIM), true) }
+    private val wide by lazy { adult(PlayerModel(Minecraft.getInstance().entityModels.bakeLayer(ModelLayers.PLAYER), false)) }
+    private val slim by lazy { adult(PlayerModel(Minecraft.getInstance().entityModels.bakeLayer(ModelLayers.PLAYER_SLIM), true)) }
+
+    /**
+     * Un modèle tout neuf se croit celui d'un bébé (`young` vaut vrai par défaut ; c'est le rendu
+     * des entités qui le remet à jour à chaque image). Il dessinerait alors un corps réduit de
+     * moitié sous une grosse tête : le dresseur paraîtrait tout petit dans son cadre.
+     */
+    private fun adult(model: PlayerModel<LivingEntity>): PlayerModel<LivingEntity> = model.also { it.young = false }
 
     /**
      * Dessine le dresseur dans [box] : centré, les pieds sur le bas du cadre, aussi grand que le
