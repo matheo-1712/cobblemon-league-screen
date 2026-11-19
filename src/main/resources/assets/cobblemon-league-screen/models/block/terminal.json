@@ -1,19 +1,8 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "cobblemon-league-screen:block/terminal"
-    },
-    "facing=east": {
-      "model": "cobblemon-league-screen:block/terminal",
-      "y": 90
-    },
-    "facing=south": {
-      "model": "cobblemon-league-screen:block/terminal",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "cobblemon-league-screen:block/terminal",
-      "y": 270
-    }
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "cobblemon-league-screen:block/terminal_top",
+    "bottom": "cobblemon-league-screen:block/terminal_bottom",
+    "side": "cobblemon-league-screen:block/terminal_side"
   }
 }

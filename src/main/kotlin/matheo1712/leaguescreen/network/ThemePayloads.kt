@@ -1,8 +1,8 @@
 package matheo1712.leaguescreen.network
 
+import C_COURONNE_ID
 import matheo1712.leaguescreen.LeagueScreen
 import matheo1712.leaguescreen.arena.ArenaSettings
-import matheo1712.leaguescreen.theme.Couronne
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.FriendlyByteBuf
@@ -43,13 +43,13 @@ data class ThemesPayload(val themes: Map<String, String>) : CustomPacketPayload 
          * @return les thèmes gardés, et le nombre de thèmes omis
          */
         fun capped(themes: Map<String, String>, maxBytes: Int): Pair<Map<String, String>, Int> {
-            val ordered = themes.entries.sortedBy { if (it.key == Couronne.ID) 0 else 1 }
+            val ordered = themes.entries.sortedBy { if (it.key == C_COURONNE_ID) 0 else 1 }
             val kept = LinkedHashMap<String, String>()
             var total = 0
             var omitted = 0
             for ((id, json) in ordered) {
                 val size = id.length + json.toByteArray(Charsets.UTF_8).size
-                if (total + size > maxBytes && id != Couronne.ID) {
+                if (total + size > maxBytes && id != C_COURONNE_ID) {
                     omitted++
                     continue
                 }

@@ -61,7 +61,7 @@ const val C_LEGACY_WALL = "linked_wall"
  * Default theme rules
  * ------------------
  */
-const val ID = "cobblemon-league-screen:couronne"
+const val C_COURONNE_ID = "cobblemon-league-screen:couronne"
 
 /**
  * ------------------

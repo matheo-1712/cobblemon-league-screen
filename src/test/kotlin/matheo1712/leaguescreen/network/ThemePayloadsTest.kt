@@ -1,5 +1,6 @@
 package matheo1712.leaguescreen.network
 
+import C_COURONNE_ID
 import io.netty.buffer.Unpooled
 import matheo1712.leaguescreen.arena.ArenaSettings
 import matheo1712.leaguescreen.arena.ArenaZone
@@ -21,7 +22,7 @@ class ThemePayloadsTest {
 
     @Test
     fun `aller-retour des themes`() {
-        val payload = ThemesPayload(mapOf(Couronne.ID to Couronne.json, "mon_pack:indigo" to """{ "name": "Indigo" }"""))
+        val payload = ThemesPayload(mapOf(C_COURONNE_ID to Couronne.json, "mon_pack:indigo" to """{ "name": "Indigo" }"""))
         assertEquals(payload, roundTrip(payload, ThemesPayload.CODEC::encode, ThemesPayload.CODEC::decode))
     }
 
@@ -39,7 +40,7 @@ class ThemePayloadsTest {
             WallEntry(BlockPos(-4, 66, 380), 8, 2, WallStatus.TOO_FAR),
             WallEntry(BlockPos(0, 0, 0), 0, 0, WallStatus.MISSING),
         )
-        val open = OpenThemeMenuPayload(BlockPos(12, -3, 400), Couronne.ID, ArenaSettings(true, ArenaZone(30, 18, 6)), Direction.EAST, walls)
+        val open = OpenThemeMenuPayload(BlockPos(12, -3, 400), C_COURONNE_ID, ArenaSettings(true, ArenaZone(30, 18, 6)), Direction.EAST, walls)
         assertEquals(open, roundTrip(open, OpenThemeMenuPayload.CODEC::encode, OpenThemeMenuPayload.CODEC::decode))
         val set = SetThemePayload(BlockPos(-5, 64, 7), "mon_pack:indigo")
         assertEquals(set, roundTrip(set, SetThemePayload.CODEC::encode, SetThemePayload.CODEC::decode))
@@ -59,10 +60,10 @@ class ThemePayloadsTest {
 
     @Test
     fun `capped garde la couronne et compte les omis`() {
-        val themes = linkedMapOf(Couronne.ID to Couronne.json)
+        val themes = linkedMapOf(C_COURONNE_ID to Couronne.json)
         for (i in 1..100) themes["mon_pack:t$i"] = "x".repeat(20_000)
         val (kept, omitted) = ThemesPayload.capped(themes, 900_000)
-        assertTrue(Couronne.ID in kept)
+        assertTrue(C_COURONNE_ID in kept)
         assertTrue(kept.entries.sumOf { it.key.length + it.value.toByteArray().size } <= 900_000)
         assertEquals(101, kept.size + omitted)
         assertTrue(omitted > 0)
@@ -70,7 +71,7 @@ class ThemePayloadsTest {
 
     @Test
     fun `capped ne retire rien sous la limite`() {
-        val themes = mapOf(Couronne.ID to Couronne.json, "mon_pack:indigo" to "{}")
+        val themes = mapOf(C_COURONNE_ID to Couronne.json, "mon_pack:indigo" to "{}")
         assertEquals(themes to 0, ThemesPayload.capped(themes, 900_000))
     }
 }

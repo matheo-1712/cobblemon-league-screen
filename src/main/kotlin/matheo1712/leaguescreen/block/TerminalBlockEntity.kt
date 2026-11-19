@@ -1,6 +1,7 @@
 package matheo1712.leaguescreen.block
 
 import C_ARENA
+import C_LEGACY_WALL
 import C_THEME
 import C_WALLS
 import matheo1712.leaguescreen.arena.ArenaSettings
@@ -123,7 +124,7 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
         tag.remove(C_WALLS)
         tag.remove(C_ARENA)
         tag.remove(C_THEME)
-        tag.remove(LEGACY_WALL)
+        tag.remove(C_LEGACY_WALL)
     }
 
     // ---- Sauvegarde (monde et structures) ----
@@ -143,7 +144,7 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
             .mapNotNull { (it as? IntArrayTag)?.asIntArray?.takeIf { a -> a.size == 3 }?.let { a -> BlockPos(a[0], a[1], a[2]) } }
             .take(TerminalLinks.MAX_WALLS)
         // L'ancien format : un seul écran, en position absolue.
-        tag.get(LEGACY_WALL)?.let { GlobalPos.CODEC.parse(NbtOps.INSTANCE, it).result().orElse(null) }?.let { legacy ->
+        tag.get(C_LEGACY_WALL)?.let { GlobalPos.CODEC.parse(NbtOps.INSTANCE, it).result().orElse(null) }?.let { legacy ->
             val local = TerminalLinks.toLocal(blockPos, facing, legacy.pos())
             if (local !in localWalls) localWalls = localWalls + local
         }

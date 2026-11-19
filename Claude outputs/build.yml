@@ -1,0 +1,32 @@
+# Builds the mod and runs the tests on every push and pull request, and checks the jar the same
+# way a release would.
+
+name: build
+on: [pull_request, push]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: build
+        run: ./gradlew build
+      - name: verify the jar
+        run: |
+          version=$(sed -n 's/^version=//p' gradle.properties | tr -d '\r')
+          python3 .github/scripts/verify-release.py "build/libs/cobblemon-league-screen-${version}.jar" "$version"
+      - name: capture build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: Artifacts
+          path: build/libs/

@@ -1,6 +1,6 @@
 package matheo1712.leaguescreen.theme
 
-import ID
+import C_COURONNE_ID
 import net.minecraft.resources.ResourceLocation
 
 /**
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation
  */
 object Couronne {
 
-    val id: ResourceLocation = ResourceLocation.parse(ID)
+    val id: ResourceLocation = ResourceLocation.parse(C_COURONNE_ID)
 
     private const val PATH = "/data/cobblemon-league-screen/leaguescreen/themes/couronne.json"
 

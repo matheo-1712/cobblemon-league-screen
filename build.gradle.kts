@@ -1,8 +1,11 @@
+import me.modmuss50.mpp.ReleaseType
+import net.fabricmc.loom.task.RemapJarTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("net.fabricmc.fabric-loom-remap")
     id("org.jetbrains.kotlin.jvm")
+    id("me.modmuss50.mod-publish-plugin")
 }
 
 base {
@@ -118,4 +121,61 @@ java {
 
 tasks.withType<JavaCompile>().configureEach {
     options.release = 21
+}
+
+/**
+ * Type de release, réglable en ligne de commande pour que le workflow de release pilote le build
+ * sans modifier de fichier suivi : `./gradlew publishMods -Prelease_type=beta`.
+ */
+val releaseType = when (providers.gradleProperty("release_type").getOrElse("stable").lowercase()) {
+    "alpha" -> ReleaseType.ALPHA
+    "beta" -> ReleaseType.BETA
+    else -> ReleaseType.STABLE
+}
+
+// Pris ici exprès : dans `publishMods`, `version` désigne la propriété de l'extension, et
+// l'interpoler donnerait sa description Gradle plutôt que le numéro.
+val modVersion = project.version.toString()
+
+publishMods {
+    // `remapJar`, pas `jar` : ce dernier garde les noms de développement et planterait hors du
+    // jeu de dev. En CI, on publie le jar déjà construit et vérifié par le job `build`.
+    file = providers.gradleProperty("release_file")
+        .map { layout.projectDirectory.file(it) }
+        .orElse(tasks.named<RemapJarTask>("remapJar").flatMap { it.archiveFile })
+    displayName = modVersion
+    version = modVersion
+    type = releaseType
+    modLoaders.add("fabric")
+
+    // Le workflow passe ici le texte de la release GitHub. En local, un simple lien.
+    changelog = providers.environmentVariable("CHANGELOG")
+        .orElse("See https://github.com/matheo-1712/cobblemon-league-screen/releases/tag/v$modVersion")
+
+    // Sans jeton, tout se fait à blanc : les fichiers sont écrits dans build/mod-publish au lieu
+    // d'être envoyés. `./gradlew publishMods` reste donc sans risque en local.
+    dryRun = providers.environmentVariable("MODRINTH_TOKEN").orNull == null
+
+    modrinth {
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN").orElse("dry-run")
+        projectId = providers.gradleProperty("modrinth_id")
+        minecraftVersions.add(providers.gradleProperty("minecraft_version").get())
+
+        // Le mod est requis des deux côtés : le serveur suit les combats, le client dessine le mur.
+        environment = CLIENT_AND_SERVER
+
+        // Les versions exactes contre lesquelles le mod est construit, lues dans gradle.properties.
+        requires {
+            slug = "cobblemon"
+            version = providers.gradleProperty("cobblemon_version")
+        }
+        requires {
+            slug = "fabric-api"
+            version = providers.gradleProperty("fabric_api_version")
+        }
+        requires {
+            slug = "fabric-language-kotlin"
+            version = providers.gradleProperty("fabric_kotlin_version")
+        }
+    }
 }

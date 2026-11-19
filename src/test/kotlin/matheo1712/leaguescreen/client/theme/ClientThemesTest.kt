@@ -1,5 +1,6 @@
 package matheo1712.leaguescreen.client.theme
 
+import C_COURONNE_ID
 import matheo1712.leaguescreen.theme.Couronne
 import net.minecraft.resources.ResourceLocation
 import kotlin.test.AfterTest
@@ -16,7 +17,7 @@ class ClientThemesTest {
 
     @Test
     fun `un theme recu est trouve`() {
-        ClientThemes.accept(mapOf(Couronne.ID to Couronne.json, indigo.toString() to indigoJson))
+        ClientThemes.accept(mapOf(C_COURONNE_ID to Couronne.json, indigo.toString() to indigoJson))
         assertEquals("Indigo", ClientThemes.forWall(indigo).name)
     }
 
@@ -28,7 +29,7 @@ class ClientThemesTest {
     @Test
     fun `un theme retire puis remis revient`() {
         ClientThemes.accept(mapOf(indigo.toString() to indigoJson))
-        ClientThemes.accept(mapOf(Couronne.ID to Couronne.json))
+        ClientThemes.accept(mapOf(C_COURONNE_ID to Couronne.json))
         assertEquals(Couronne.id, ClientThemes.forWall(indigo).id)
         ClientThemes.accept(mapOf(indigo.toString() to indigoJson))
         assertEquals(indigo, ClientThemes.forWall(indigo).id)
@@ -52,7 +53,7 @@ class ClientThemesTest {
             mapOf(
                 "mon_pack:zeta" to """{ "name": "Zeta" }""",
                 indigo.toString() to indigoJson,
-                Couronne.ID to Couronne.json,
+                C_COURONNE_ID to Couronne.json,
             ),
         )
         assertEquals(listOf(Couronne.id, indigo, ResourceLocation.parse("mon_pack:zeta")), ClientThemes.list().map { it.id })

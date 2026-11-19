@@ -1,0 +1,186 @@
+# Builds a GitHub release once, then publishes it to Modrinth and attaches the jar to the release.
+#
+# Triggered by publishing a release on GitHub: its tag names the version, its body becomes the
+# Modrinth changelog, and the pre-release checkbox picks between a stable and a beta release.
+#
+# If MODRINTH.md exists, it is pushed over the project description, so the page always matches
+# the release that was just published.
+#
+# The tag is the single source of truth for the version: it is handed to Gradle as `-Pversion`,
+# which is what `processResources` expands into fabric.mod.json. `version` in gradle.properties
+# is only the default a local build falls back on, so nothing has to be bumped before tagging.
+
+name: release
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      # A pre-release goes out as a beta; a tag saying alpha as an alpha.
+      - name: resolve the release
+        id: release
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          version="${TAG#v}"
+
+          # The jar name, fabric.mod.json and the Modrinth version number are all built from this
+          # string, so a tag like "latest" has to stop here rather than ship a jar named after it.
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.+-]+)?$ ]]; then
+            echo "::error::tag $TAG does not carry a version number (expected something like v1.2.3)"
+            exit 1
+          fi
+
+          if [ "$PRERELEASE" = "true" ]; then
+            case "$version" in
+              *alpha*) type=alpha ;;
+              *) type=beta ;;
+            esac
+          else
+            type=stable
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "type=$type" >> "$GITHUB_OUTPUT"
+          echo "Releasing $version as $type"
+
+      - name: build
+        run: ./gradlew build "-Pversion=${{ steps.release.outputs.version }}"
+
+      - name: stage release files
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          python3 .github/scripts/verify-release.py "build/libs/cobblemon-league-screen-${VERSION}.jar" "$VERSION"
+          mkdir -p build/release
+          cp "build/libs/cobblemon-league-screen-${VERSION}.jar" build/release/
+          cd build/release
+          sha256sum "cobblemon-league-screen-${VERSION}.jar" > SHA256SUMS
+
+      - name: save release files
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-files
+          path: build/release/
+          if-no-files-found: error
+
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      type: ${{ steps.release.outputs.type }}
+
+  modrinth:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/wrapper-validation@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+      - run: chmod +x ./gradlew
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: release-files
+          path: build/release
+
+      - name: verify release files
+        working-directory: build/release
+        run: sha256sum -c SHA256SUMS
+
+      # The plugin silently switches to dry-run when the token is absent.
+      - name: check Modrinth credentials
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: test -n "$MODRINTH_TOKEN" || { echo '::error::MODRINTH_TOKEN is empty'; exit 1; }
+
+      - name: publish to modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CHANGELOG: ${{ github.event.release.body }}
+        run: |
+          ./gradlew publishMods \
+            "-Pversion=${{ needs.build.outputs.version }}" \
+            "-Prelease_type=${{ needs.build.outputs.type }}" \
+            "-Prelease_file=build/release/cobblemon-league-screen-${{ needs.build.outputs.version }}.jar"
+
+      - name: update the modrinth description
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          if [ ! -f MODRINTH.md ]; then
+            echo "::notice::no MODRINTH.md, the project description is left as it is"
+            exit 0
+          fi
+
+          project=$(sed -n 's/^modrinth_id=//p' gradle.properties | tr -d '\r')
+          [ -n "$project" ] || { echo "::error::modrinth_id is missing from gradle.properties"; exit 1; }
+
+          jq -Rs '{body: .}' MODRINTH.md > modrinth-body.json
+
+          args=(
+            -sS -o modrinth-response.txt -w '%{http_code}'
+            -X PATCH "https://api.modrinth.com/v2/project/$project"
+            -H "Authorization: $MODRINTH_TOKEN"
+            -H 'Content-Type: application/json'
+            -H 'User-Agent: matheo-1712/cobblemon-league-screen (release workflow)'
+            --data @modrinth-body.json
+          )
+          code=$(curl "${args[@]}")
+
+          if [ "$code" != "204" ]; then
+            echo "::error::Modrinth refused the description update (HTTP $code)"
+            cat modrinth-response.txt
+            exit 1
+          fi
+
+          echo "description updated from MODRINTH.md"
+
+  github-assets:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: release-files
+          path: build/release
+
+      - name: verify release files
+        working-directory: build/release
+        run: sha256sum -c SHA256SUMS
+
+      - name: attach the jar to the github release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.event.release.tag_name }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          jar="build/release/cobblemon-league-screen-${VERSION}.jar"
+          [ -f "$jar" ] || { echo "::error::$jar was not built"; exit 1; }
+          gh release upload "$TAG" "$jar" --clobber
