@@ -1,12 +1,12 @@
 package matheo1712.leaguescreen.block
 
-import MAX_DISTANCE
+import C_MAX_DISTANCE
 import net.minecraft.core.GlobalPos
 
 object LinkRules {
 
-    /** Même dimension, et [MAX_DISTANCE] blocs au plus en ligne droite. */
+    /** Même dimension, et [C_MAX_DISTANCE] blocs au plus en ligne droite. */
     fun inRange(terminal: GlobalPos, wallBlock: GlobalPos): Boolean =
         terminal.dimension() == wallBlock.dimension() &&
-                terminal.pos().distSqr(wallBlock.pos()) <= (MAX_DISTANCE * MAX_DISTANCE).toDouble()
+                terminal.pos().distSqr(wallBlock.pos()) <= (C_MAX_DISTANCE * C_MAX_DISTANCE).toDouble()
 }

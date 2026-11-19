@@ -1,8 +1,8 @@
 package matheo1712.leaguescreen.block
 
-import BOARD
-import THEME
-import WALL
+import C_BOARD
+import C_THEME
+import C_WALL
 import matheo1712.leaguescreen.board.BoardState
 import matheo1712.leaguescreen.registry.ModBlocks
 import matheo1712.leaguescreen.screen.WallRect
@@ -71,8 +71,8 @@ class ScreenBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlock
     /** Sur le disque : le mur et son thème. Un combat ne survit pas à un redémarrage, le tableau non plus. */
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.saveAdditional(tag, registries)
-        wall?.let { tag.put(WALL, it.toSizeTag()) }
-        tag.putString(THEME, theme.toString())
+        wall?.let { tag.put(C_WALL, it.toSizeTag()) }
+        tag.putString(C_THEME, theme.toString())
     }
 
     /** Lit aussi bien la sauvegarde (sans tableau) que le paquet de mise à jour (avec). */
@@ -80,17 +80,17 @@ class ScreenBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlock
         super.loadAdditional(tag, registries)
         // L'origine du mur est ce bloc, son orientation celle du bloc : un mur copié ou tourné reste juste.
         val facing = blockState.getOptionalValue(ScreenBlock.FACING).orElse(null)
-        wall = if (tag.contains(WALL) && facing != null) WallRect.fromSizeTag(tag.getCompound(WALL), blockPos, facing) else null
-        board = if (tag.contains(BOARD)) BoardState.fromTag(tag.getCompound(BOARD)) else BoardState.OFF
-        theme = ResourceLocation.tryParse(tag.getString(THEME)).takeIf { tag.contains(THEME) } ?: Couronne.id
+        wall = if (tag.contains(C_WALL) && facing != null) WallRect.fromSizeTag(tag.getCompound(C_WALL), blockPos, facing) else null
+        board = if (tag.contains(C_BOARD)) BoardState.fromTag(tag.getCompound(C_BOARD)) else BoardState.OFF
+        theme = ResourceLocation.tryParse(tag.getString(C_THEME)).takeIf { tag.contains(C_THEME) } ?: Couronne.id
     }
 
     /** Vers le client : le mur **et** le tableau. Le tag n'est jamais vide, sans quoi le client l'ignorerait. */
     override fun getUpdateTag(registries: HolderLookup.Provider): CompoundTag {
         val tag = CompoundTag()
-        wall?.let { tag.put(WALL, it.toSizeTag()) }
-        tag.put(BOARD, board.toTag())
-        tag.putString(THEME, theme.toString())
+        wall?.let { tag.put(C_WALL, it.toSizeTag()) }
+        tag.put(C_BOARD, board.toTag())
+        tag.putString(C_THEME, theme.toString())
         return tag
     }
 

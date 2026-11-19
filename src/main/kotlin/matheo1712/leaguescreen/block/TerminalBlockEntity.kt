@@ -1,8 +1,8 @@
 package matheo1712.leaguescreen.block
 
-import ARENA
-import THEME
-import WALLS
+import C_ARENA
+import C_THEME
+import C_WALLS
 import matheo1712.leaguescreen.arena.ArenaSettings
 import matheo1712.leaguescreen.arena.ArenaTerminals
 import matheo1712.leaguescreen.registry.ModBlocks
@@ -120,9 +120,9 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
     /** Ce que portent les composants de l'objet n'a pas à être recopié dans ses données de bloc. */
     @Suppress("OVERRIDE_DEPRECATION")
     override fun removeComponentsFromTag(tag: CompoundTag) {
-        tag.remove(WALLS)
-        tag.remove(ARENA)
-        tag.remove(THEME)
+        tag.remove(C_WALLS)
+        tag.remove(C_ARENA)
+        tag.remove(C_THEME)
         tag.remove(LEGACY_WALL)
     }
 
@@ -132,14 +132,14 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
         super.saveAdditional(tag, registries)
         val list = ListTag()
         localWalls.forEach { list.add(IntArrayTag(intArrayOf(it.x, it.y, it.z))) }
-        tag.put(WALLS, list)
-        tag.put(ARENA, arena.toTag())
-        tag.putString(THEME, theme.toString())
+        tag.put(C_WALLS, list)
+        tag.put(C_ARENA, arena.toTag())
+        tag.putString(C_THEME, theme.toString())
     }
 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
-        localWalls = tag.getList(WALLS, Tag.TAG_INT_ARRAY.toInt())
+        localWalls = tag.getList(C_WALLS, Tag.TAG_INT_ARRAY.toInt())
             .mapNotNull { (it as? IntArrayTag)?.asIntArray?.takeIf { a -> a.size == 3 }?.let { a -> BlockPos(a[0], a[1], a[2]) } }
             .take(TerminalLinks.MAX_WALLS)
         // L'ancien format : un seul écran, en position absolue.
@@ -147,8 +147,8 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
             val local = TerminalLinks.toLocal(blockPos, facing, legacy.pos())
             if (local !in localWalls) localWalls = localWalls + local
         }
-        arena = if (tag.contains(ARENA)) ArenaSettings.fromTag(tag.getCompound(ARENA)) else ArenaSettings.DEFAULT
-        theme = ResourceLocation.tryParse(tag.getString(THEME)).takeIf { tag.contains(THEME) } ?: Couronne.id
+        arena = if (tag.contains(C_ARENA)) ArenaSettings.fromTag(tag.getCompound(C_ARENA)) else ArenaSettings.DEFAULT
+        theme = ResourceLocation.tryParse(tag.getString(C_THEME)).takeIf { tag.contains(C_THEME) } ?: Couronne.id
         announce()
     }
 }

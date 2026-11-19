@@ -1,6 +1,6 @@
 package matheo1712.leaguescreen.battle
 
-import POLL_INTERVAL
+import C_POLL_INTERVAL
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
@@ -33,7 +33,7 @@ import java.util.UUID
  * clique en plein combat, l'historique (qui a déjà été envoyé) est complet.
  *
  * Deux sources se recoupent : les événements de Cobblemon (envoi d'un Pokémon, victoire, fuite),
- * et une sonde toutes les [POLL_INTERVAL] ticks, qui relit qui est sur le terrain et qui est K.O.,
+ * et une sonde toutes les [C_POLL_INTERVAL] ticks, qui relit qui est sur le terrain et qui est K.O.,
  * et qui éteint les murs d'un combat disparu sans prévenir (déconnexion, arrêt forcé).
  */
 object BattleTracker {
@@ -216,7 +216,7 @@ object BattleTracker {
         this.server = server
         tick++
         book.expire(tick).forEach(::switchOff)
-        if (tick % POLL_INTERVAL != 0L) return
+        if (tick % C_POLL_INTERVAL != 0L) return
 
         for ((id, record) in records.toList()) {
             val battle = BattleRegistry.getBattle(id)

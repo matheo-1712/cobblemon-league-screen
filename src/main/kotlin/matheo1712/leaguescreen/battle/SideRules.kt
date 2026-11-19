@@ -1,6 +1,6 @@
 package matheo1712.leaguescreen.battle
 
-import MIN_GAP
+import C_MIN_GAP
 import matheo1712.leaguescreen.screen.WallRect
 import net.minecraft.world.phys.Vec3
 import java.util.UUID
@@ -28,7 +28,7 @@ object SideRules {
         if (clickerAt == null || opponentAt == null) return clicker
         val gap = along(wall, opponentAt) - along(wall, clickerAt)
         return when {
-            kotlin.math.abs(gap) < MIN_GAP -> clicker
+            kotlin.math.abs(gap) < C_MIN_GAP -> clicker
             gap > 0 -> clicker
             else -> opponent
         }
