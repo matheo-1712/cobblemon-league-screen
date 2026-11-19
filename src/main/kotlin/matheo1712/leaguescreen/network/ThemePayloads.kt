@@ -14,10 +14,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
  */
 data class ThemesPayload(val themes: Map<String, String>) : CustomPacketPayload {
 
-    private const val MAX_JSON = 1_048_576
     override fun type(): CustomPacketPayload.Type<ThemesPayload> = TYPE
 
     companion object {
+        /** Taille maximale du JSON d'un thème dans un paquet. */
+        private const val MAX_JSON = 1_048_576
+
         val TYPE = CustomPacketPayload.Type<ThemesPayload>(LeagueScreen.id("themes"))
 
         val CODEC: StreamCodec<FriendlyByteBuf, ThemesPayload> = StreamCodec.of(
