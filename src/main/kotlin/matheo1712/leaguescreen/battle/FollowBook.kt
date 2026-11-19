@@ -1,6 +1,6 @@
 package matheo1712.leaguescreen.battle
 
-import VICTORY_TICKS
+import C_VICTORY_TICKS
 import net.minecraft.core.GlobalPos
 import java.util.UUID
 
@@ -44,14 +44,14 @@ class FollowBook {
 
     /**
      * Le combat est fini. Avec un vainqueur, ses murs passent à l'écran de victoire pour
-     * [VICTORY_TICKS] ; sans vainqueur, ils sont retirés tout de suite.
+     * [C_VICTORY_TICKS] ; sans vainqueur, ils sont retirés tout de suite.
      *
      * @return les murs retirés sur le moment, à éteindre
      */
     fun finish(battleId: UUID, hasWinner: Boolean, now: Long): List<GlobalPos> {
         val concerned = follows.values.filter { it.battleId == battleId && it.live }
         if (hasWinner) {
-            concerned.forEach { follows[it.wall] = it.copy(victoryUntil = now + VICTORY_TICKS) }
+            concerned.forEach { follows[it.wall] = it.copy(victoryUntil = now + C_VICTORY_TICKS) }
             return emptyList()
         }
         concerned.forEach { follows.remove(it.wall) }

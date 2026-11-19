@@ -1,16 +1,26 @@
 /**
  * ------------------
+ * General rules
+ * ------------------
+ */
+const val C_FOLDER = "leaguescreen/themes"
+
+/** Distance maximale entre le joueur et le centre de la borne, en blocs. */
+const val C_REACH = 8.0
+
+/**
+ * ------------------
  * Link rules
  * ------------------
  */
-const val MAX_DISTANCE = 64
+const val C_MAX_DISTANCE = 64
 
 /**
  * ------------------
  * Battle tracker rules
  * ------------------
  */
-const val POLL_INTERVAL = 5
+const val C_POLL_INTERVAL = 5
 
 /**
  * ------------------
@@ -18,7 +28,7 @@ const val POLL_INTERVAL = 5
  * ------------------
  */
 /** Dix secondes. */
-const val VICTORY_TICKS = 200L
+const val C_VICTORY_TICKS = 200L
 
 /**
  * ------------------
@@ -26,22 +36,36 @@ const val VICTORY_TICKS = 200L
  * ------------------
  */
 // En dessous de cet écart, en blocs, les deux dresseurs sont alignés face au mur : ni gauche ni droite.
-const val MIN_GAP = 1.0
+const val C_MIN_GAP = 1.0
 
 /**
  * ------------------
  * Screen block entity data keys
  * ------------------
  */
-const val WALL = "wall"
-const val BOARD = "board"
-const val THEME = "theme"
+const val C_WALL = "wall"
+const val C_BOARD = "board"
+const val C_THEME = "theme"
 
 /**
  * ------------------
  * Terminal block entity data keys
  * ------------------
  */
-const val WALLS = "walls"
-const val ARENA = "arena"
-const val LEGACY_WALL = "linked_wall"
+const val C_WALLS = "walls"
+const val C_ARENA = "arena"
+const val C_LEGACY_WALL = "linked_wall"
+
+/**
+ * ------------------
+ * Default theme rules
+ * ------------------
+ */
+const val ID = "cobblemon-league-screen:couronne"
+
+/**
+ * ------------------
+ * Color rules
+ * ------------------
+ */
+const val COLOR_WHITE = 0xFFFFFFFF.toInt()
