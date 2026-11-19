@@ -149,6 +149,13 @@ object ThemeParser {
                         box, alpha, it, colorOr("frame", ColorRef.Named("side")),
                         o.get("border")?.let { b -> number(b, "$path.border") },
                         o.get("fill")?.let { f -> color(f, "$path.fill") } ?: ColorRef.Named("side", 0.25f),
+                        figure = when (val style = o.get("style")?.let { s -> string(s, "$path.style") } ?: "bust") {
+                            "bust" -> false
+                            "figure" -> true
+                            else -> fail("$path.style", "bust ou figure attendu, reçu « $style »")
+                        },
+                        yaw = o.get("yaw")?.let { y -> number(y, "$path.yaw") } ?: 0f,
+                        pitch = o.get("pitch")?.let { p -> number(p, "$path.pitch").coerceIn(-60f, 60f) } ?: 0f,
                     )
                 }
                 "slot" -> side()?.let {

@@ -41,10 +41,17 @@ data class TextLayer(override val box: Box, override val alpha: Float, val value
 
 data class NameLayer(override val box: Box, override val alpha: Float, val side: SideRef, val color: ColorRef, val align: Align) : Layer
 
-/** [border] en pixels de maquette, `null` pour 6 % du côté. */
+/**
+ * [border] en pixels de maquette, `null` pour 6 % du côté.
+ *
+ * [figure] dessine le dresseur en entier, en 3D, debout sur le bas du cadre et tourné de [yaw]
+ * degrés (vers le centre pour le camp de gauche, en miroir pour celui de droite), la tête
+ * inclinée de [pitch] degrés (positif : il baisse les yeux) ; sinon, son buste à plat.
+ */
 data class PortraitLayer(
     override val box: Box, override val alpha: Float,
     val side: SideRef, val frame: ColorRef, val border: Float?, val fill: ColorRef,
+    val figure: Boolean = false, val yaw: Float = 0f, val pitch: Float = 0f,
 ) : Layer
 
 /** La case n° [index] (1 à 6) d'un camp. [style] remplace, pour cette case seulement, les styles du thème. */

@@ -7,6 +7,7 @@ import matheo1712.leaguescreen.screen.Frame
 import matheo1712.leaguescreen.theme.ThemeGeometry
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.DefaultPlayerSkin
+import net.minecraft.client.resources.PlayerSkin
 import net.minecraft.resources.ResourceLocation
 import java.util.UUID
 import kotlin.math.min
@@ -27,8 +28,14 @@ object PortraitPainter {
      * @param border l'épaisseur du cadre, en unités du repère
      * @param frame la couleur du cadre ; la silhouette par défaut la reprend
      * @param fill la couleur du fond
+     * @param figure le dresseur en entier, en 3D, plutôt que son buste à plat
+     * @param yaw la rotation de la figure, en degrés ; positive, elle se tourne vers la droite
+     * @param pitch l'inclinaison de sa tête, en degrés ; positive, elle baisse les yeux
      */
-    fun paint(canvas: WallCanvas, portrait: Portrait, box: Frame, border: Float, frame: Int, fill: Int, z: Float) {
+    fun paint(
+        canvas: WallCanvas, portrait: Portrait, box: Frame, border: Float, frame: Int, fill: Int, z: Float,
+        figure: Boolean = false, yaw: Float = 0f, pitch: Float = 0f,
+    ) {
         val inner = Frame(box.x + border, box.y + border, box.width - 2 * border, box.height - 2 * border)
         if (inner.width <= 0f || inner.height <= 0f) {
             canvas.fill(box.x, box.y, box.x + box.width, box.y + box.height, frame, z)
@@ -47,6 +54,10 @@ object PortraitPainter {
         val cy = inner.y + inner.height / 2
         val side = min(inner.width, inner.height)
         val skin = skinOf(portrait)
+        if (figure && skin != null) {
+            FigurePainter.draw(canvas, skin, slimOf(portrait), inner, yaw, pitch, z + ThemeGeometry.SUB_STEP)
+            return
+        }
         if (skin == null) {
             canvas.texture(SILHOUETTE, cx, cy, side * 0.9f, side * 0.9f, Colors.withAlpha(frame, 0.85f), z + ThemeGeometry.SUB_STEP)
         } else {
@@ -64,6 +75,17 @@ object PortraitPainter {
         PortraitKind.TEXTURE -> ResourceLocation.tryParse(portrait.id)?.takeIf(ThemeTextures::exists)
         PortraitKind.TRAINER -> trainerSkin(portrait.id)
         PortraitKind.NONE -> null
+    }
+
+    /**
+     * Le skin a-t-il des bras fins (modèle « Alex ») ? Connu pour un joueur ; pour un dresseur,
+     * le serveur ne l'envoie pas, et le modèle large est pris par défaut.
+     */
+    fun slimOf(portrait: Portrait): Boolean {
+        if (portrait.kind != PortraitKind.PLAYER) return false
+        val uuid = runCatching { UUID.fromString(portrait.id) }.getOrNull() ?: return false
+        val info = Minecraft.getInstance().connection?.getPlayerInfo(uuid)
+        return (info?.skin ?: DefaultPlayerSkin.get(uuid)).model() == PlayerSkin.Model.SLIM
     }
 
     /** Le skin d'un joueur que le client connaît ; le skin par défaut sinon. */

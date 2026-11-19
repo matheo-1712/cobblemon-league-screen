@@ -93,6 +93,10 @@ object ThemePainter {
                     PortraitPainter.paint(
                         canvas, view.portrait, box, border,
                         color(layer.frame, side), color(layer.fill, side), z,
+                        layer.figure,
+                        // Comme les Pokémon : le camp de droite se tourne en miroir de celui de gauche.
+                        if (side == SideRef.RIGHT) -layer.yaw else layer.yaw,
+                        layer.pitch,
                     )
                 }
                 is SlotLayer -> slot(layer, box, z)
