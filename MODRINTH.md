@@ -27,13 +27,9 @@ Download the latest version from the [releases](https://github.com/matheo-1712/c
 
 ### League Screen
 
-8 black stained glass around a redstone dust make 8 screens.
-
 <img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/craft-league_screen.png" alt="League Screen recipe"/>
 
 ### Registration Terminal
-
-A League Screen, a Poké Ball and an iron ingot, in any shape.
 
 <img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/craft-registration_terminal.png" alt="Registration Terminal recipe"/>
 
