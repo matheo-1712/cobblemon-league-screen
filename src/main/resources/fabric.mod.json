@@ -8,7 +8,7 @@
     "matheo1712"
   ],
   "contact": {},
-  "license": "LicenseRef-All-Rights-Reserved",
+  "license": "MIT",
   "environment": "*",
   "entrypoints": {
     "main": [
