@@ -23,6 +23,16 @@ Cobblemon League Screen est un mod Minecraft open source qui ajoute un écran qu
 
 Télécharge la dernière version depuis les [releases](https://github.com/matheo-1712/cobblemon-league-screen/releases) et place le `.jar` dans ton dossier `mods`.
 
+## Crafts
+
+### Écran de ligue
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/craft-league_screen.png" alt="Craft de l'écran de ligue"/>
+
+### Terminal d'inscription
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/craft-registration_terminal.png" alt="Craft du terminal d'inscription"/>
+
 ## Datapack
 
 Tu peux créer tes propres thèmes d'écran avec un data pack : couleurs, place des Pokémon, portraits des dresseurs, images et textes. Tout est expliqué dans le [guide des data packs](docs/DATAPACK.fr.md).
