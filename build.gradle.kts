@@ -191,9 +191,11 @@ publishMods {
     changelog = providers.environmentVariable("CHANGELOG")
         .orElse("See https://github.com/matheo-1712/cobblemon-league-screen/releases/tag/v$modVersion")
 
-    // Sans jeton, tout se fait à blanc : les fichiers sont écrits dans build/mod-publish au lieu
-    // d'être envoyés. `./gradlew publishMods` reste donc sans risque en local.
-    dryRun = providers.environmentVariable("MODRINTH_TOKEN").orNull == null
+    // Sans aucun jeton, tout se fait à blanc : les fichiers sont écrits dans build/publishMods au
+    // lieu d'être envoyés. `./gradlew publishMods` reste donc sans risque en local. La CI lance
+    // chaque plateforme à part (`publishModrinth`, `publishCurseforge`) avec son seul jeton.
+    dryRun = providers.environmentVariable("MODRINTH_TOKEN").orNull == null &&
+        providers.environmentVariable("CURSEFORGE_TOKEN").orNull == null
 
     modrinth {
         accessToken = providers.environmentVariable("MODRINTH_TOKEN").orElse("dry-run")
@@ -216,5 +218,19 @@ publishMods {
             slug = "fabric-language-kotlin"
             version = providers.gradleProperty("fabric_kotlin_version")
         }
+    }
+
+    curseforge {
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN").orElse("dry-run")
+        projectId = providers.gradleProperty("curseforge_id")
+        minecraftVersions.add(providers.gradleProperty("minecraft_version").get())
+        javaVersions.add(JavaVersion.VERSION_21)
+
+        // Requis des deux côtés, comme sur Modrinth.
+        clientRequired = true
+        serverRequired = true
+
+        // CurseForge ne prend que le projet, pas la version exacte.
+        requires("cobblemon", "fabric-api", "fabric-language-kotlin")
     }
 }
