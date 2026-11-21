@@ -1,6 +1,7 @@
 package matheo1712.leaguescreen.client.render
 
 import com.mojang.blaze3d.vertex.PoseStack
+import matheo1712.leaguescreen.LeagueScreen
 import matheo1712.leaguescreen.theme.Align
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
@@ -20,14 +21,18 @@ import net.minecraft.resources.ResourceLocation
  */
 class WallCanvas(val pose: PoseStack, val buffers: MultiBufferSource) {
 
-    /** Un rectangle de couleur unie. */
+    /**
+     * Un rectangle de couleur unie : une texture blanche teintée, dessinée comme les images.
+     * Pas `RenderType.textBackground()` : avec Iris (pack de shaders), ce rendu-là quittait la
+     * texture du mur pour l'écran du jeu, et le fond manquait.
+     */
     fun fill(x0: Float, y0: Float, x1: Float, y1: Float, argb: Int, z: Float) {
         val matrix = pose.last().pose()
-        val consumer = buffers.getBuffer(RenderType.textBackground())
-        consumer.addVertex(matrix, x0, y0, z).setColor(argb).setLight(LIGHT)
-        consumer.addVertex(matrix, x1, y0, z).setColor(argb).setLight(LIGHT)
-        consumer.addVertex(matrix, x1, y1, z).setColor(argb).setLight(LIGHT)
-        consumer.addVertex(matrix, x0, y1, z).setColor(argb).setLight(LIGHT)
+        val consumer = buffers.getBuffer(RenderType.text(WHITE))
+        consumer.addVertex(matrix, x0, y0, z).setColor(argb).setUv(0f, 0f).setLight(LIGHT)
+        consumer.addVertex(matrix, x1, y0, z).setColor(argb).setUv(1f, 0f).setLight(LIGHT)
+        consumer.addVertex(matrix, x1, y1, z).setColor(argb).setUv(1f, 1f).setLight(LIGHT)
+        consumer.addVertex(matrix, x0, y1, z).setColor(argb).setUv(0f, 1f).setLight(LIGHT)
     }
 
     /**
@@ -82,5 +87,6 @@ class WallCanvas(val pose: PoseStack, val buffers: MultiBufferSource) {
 
     companion object {
         val LIGHT: Int = LightTexture.FULL_BRIGHT
+        private val WHITE: ResourceLocation = LeagueScreen.id("textures/misc/white.png")
     }
 }

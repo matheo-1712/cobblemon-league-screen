@@ -34,7 +34,7 @@ class ScreenWallRenderer(context: BlockEntityRendererProvider.Context) : BlockEn
             return
         }
         val theme = ClientThemes.forWall(blockEntity.theme)
-        val texture = BakedWalls.textureFor(blockEntity, wall.width, wall.height, board, theme)
+        val texture = BakedWalls.textureFor(blockEntity, wall.width, wall.height, board, theme) ?: return
 
         poseStack.pushPose()
         // Tourne le bloc pour que +z sorte de la dalle et +x aille vers la droite du spectateur,

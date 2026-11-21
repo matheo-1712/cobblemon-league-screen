@@ -66,7 +66,7 @@ object FigurePainter {
         // y et z. Deux retournements : les faces gardent leur orientation.
         pose.scale(1f, -1f, -1f)
         pose.translate(0f, -FEET, 0f)
-        val buffer = canvas.buffers.getBuffer(RenderType.entityTranslucent(skin))
+        val buffer = canvas.buffers.getBuffer(RenderType.entityCutoutNoCull(skin))
         // Le modèle est partagé : la tête est inclinée le temps de ce dessin, puis remise droite.
         val tilt = Math.toRadians(pitch.toDouble()).toFloat()
         model.head.xRot = tilt
