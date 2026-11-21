@@ -29,11 +29,14 @@ object ClientThemes {
         themes = result.themes
     }
 
-    /** Le thème à dessiner pour un mur : le sien, ou la Couronne s'il est inconnu ici. */
-    fun forWall(id: ResourceLocation): Theme = themes[id] ?: themes[Couronne.id] ?: Couronne.theme
+    /** Le thème à dessiner pour un mur : le sien, sinon celui par défaut, sinon la Couronne. */
+    fun forWall(id: ResourceLocation): Theme =
+        themes[id] ?: themes[ThemeRegistry.defaultId] ?: themes[Couronne.id] ?: Couronne.theme
 
-    /** La Couronne d'abord, puis les autres par identifiant. */
-    fun list(): List<Theme> = themes.values.sortedWith(compareBy<Theme> { it.id != Couronne.id }.thenBy { it.id.toString() })
+    /** Le thème par défaut d'abord, puis la Couronne, puis les autres par identifiant. */
+    fun list(): List<Theme> = themes.values.sortedWith(
+        compareBy<Theme> { if (it.id == ThemeRegistry.defaultId) 0 else if (it.id == Couronne.id) 1 else 2 }.thenBy { it.id.toString() },
+    )
 
     /** En quittant un serveur : on revient à la seule Couronne. */
     fun clear() {

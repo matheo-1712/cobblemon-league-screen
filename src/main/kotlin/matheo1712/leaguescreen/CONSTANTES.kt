@@ -63,6 +63,9 @@ const val C_LEGACY_WALL = "linked_wall"
  */
 const val C_COURONNE_ID = "cobblemon-league-screen:couronne"
 
+/** Le thème des nouveaux écrans et bornes, et le premier du menu. */
+const val C_DEFAULT_THEME_ID = "cobblemon-league-screen:glace_feu"
+
 /**
  * ------------------
  * Color rules

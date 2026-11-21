@@ -14,6 +14,7 @@
   "message.cobblemon-league-screen.wall_busy": "The screen is already following another battle",
   "board.cobblemon-league-screen.victory": "VICTORY",
   "theme.cobblemon-league-screen.couronne": "Crown",
+  "theme.cobblemon-league-screen.glace_feu": "Ice & Fire",
   "message.cobblemon-league-screen.theme_applied": "Theme applied: %s",
   "message.cobblemon-league-screen.theme_unknown": "This theme no longer exists on the server",
   "message.cobblemon-league-screen.theme_too_far": "Too far from the terminal",

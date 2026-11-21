@@ -1,5 +1,6 @@
 package matheo1712.leaguescreen.theme
 
+import C_DEFAULT_THEME_ID
 import C_FOLDER
 import matheo1712.leaguescreen.LeagueScreen
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
@@ -16,6 +17,9 @@ import net.minecraft.server.packs.resources.ResourceManager
  * là : si un pack la remplace par un fichier illisible, c'est celle du jar qui reste.
  */
 object ThemeRegistry {
+    /** Le thème des nouveaux écrans et bornes, et le premier du menu. La Couronne reste le repli. */
+    val defaultId: ResourceLocation = ResourceLocation.parse(C_DEFAULT_THEME_ID)
+
     /**
      * @param themes les thèmes lus, Couronne comprise
      * @param raw leur JSON tel quel, ce que le serveur envoie aux joueurs

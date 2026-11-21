@@ -1,6 +1,7 @@
 package matheo1712.leaguescreen.network
 
 import C_COURONNE_ID
+import C_DEFAULT_THEME_ID
 import matheo1712.leaguescreen.LeagueScreen
 import matheo1712.leaguescreen.arena.ArenaSettings
 import net.minecraft.core.BlockPos
@@ -43,7 +44,7 @@ data class ThemesPayload(val themes: Map<String, String>) : CustomPacketPayload 
          * @return les thèmes gardés, et le nombre de thèmes omis
          */
         fun capped(themes: Map<String, String>, maxBytes: Int): Pair<Map<String, String>, Int> {
-            val ordered = themes.entries.sortedBy { if (it.key == C_COURONNE_ID) 0 else 1 }
+            val ordered = themes.entries.sortedBy { if (it.key == C_COURONNE_ID) 0 else if (it.key == C_DEFAULT_THEME_ID) 1 else 2 }
             val kept = LinkedHashMap<String, String>()
             var total = 0
             var omitted = 0

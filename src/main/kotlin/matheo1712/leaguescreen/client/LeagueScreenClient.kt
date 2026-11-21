@@ -8,7 +8,7 @@ import matheo1712.leaguescreen.client.theme.ClientThemes
 import matheo1712.leaguescreen.network.ThemesPayload
 import matheo1712.leaguescreen.network.OpenThemeMenuPayload
 import matheo1712.leaguescreen.client.gui.ThemeMenuScreen
-import matheo1712.leaguescreen.theme.Couronne
+import matheo1712.leaguescreen.theme.ThemeRegistry
 import matheo1712.leaguescreen.client.render.ScreenWallRenderer
 import matheo1712.leaguescreen.client.render.ThemeTextures
 import matheo1712.leaguescreen.registry.ModBlocks
@@ -36,7 +36,7 @@ object LeagueScreenClient : ClientModInitializer {
         }
         ClientPlayNetworking.registerGlobalReceiver(ThemesPayload.TYPE) { payload, _ -> ClientThemes.accept(payload.themes) }
         ClientPlayNetworking.registerGlobalReceiver(OpenThemeMenuPayload.TYPE) { payload, context ->
-            val current = ResourceLocation.tryParse(payload.current) ?: Couronne.id
+            val current = ResourceLocation.tryParse(payload.current) ?: ThemeRegistry.defaultId
             context.client().setScreen(ThemeMenuScreen(payload.terminal, current, payload.arena, payload.facing, payload.walls))
         }
         linkTrainerSkins()

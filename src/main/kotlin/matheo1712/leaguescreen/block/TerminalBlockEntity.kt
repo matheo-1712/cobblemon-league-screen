@@ -8,7 +8,7 @@ import matheo1712.leaguescreen.arena.ArenaSettings
 import matheo1712.leaguescreen.arena.ArenaTerminals
 import matheo1712.leaguescreen.registry.ModBlocks
 import matheo1712.leaguescreen.registry.ModComponents
-import matheo1712.leaguescreen.theme.Couronne
+import matheo1712.leaguescreen.theme.ThemeRegistry
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.GlobalPos
@@ -42,7 +42,7 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
         private set
 
     /** Le thème que la borne donne à ses écrans. */
-    var theme: ResourceLocation = Couronne.id
+    var theme: ResourceLocation = ThemeRegistry.defaultId
         private set
 
     val facing: Direction
@@ -115,7 +115,7 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
         val walls = walls()
         if (walls.isNotEmpty()) components.set(ModComponents.LINKED_WALLS, walls)
         if (arena != ArenaSettings.DEFAULT) components.set(ModComponents.ARENA, arena)
-        if (theme != Couronne.id) components.set(ModComponents.THEME, theme)
+        if (theme != ThemeRegistry.defaultId) components.set(ModComponents.THEME, theme)
     }
 
     /** Ce que portent les composants de l'objet n'a pas à être recopié dans ses données de bloc. */
@@ -149,7 +149,7 @@ class TerminalBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBlo
             if (local !in localWalls) localWalls = localWalls + local
         }
         arena = if (tag.contains(C_ARENA)) ArenaSettings.fromTag(tag.getCompound(C_ARENA)) else ArenaSettings.DEFAULT
-        theme = ResourceLocation.tryParse(tag.getString(C_THEME)).takeIf { tag.contains(C_THEME) } ?: Couronne.id
+        theme = ResourceLocation.tryParse(tag.getString(C_THEME)).takeIf { tag.contains(C_THEME) } ?: ThemeRegistry.defaultId
         announce()
     }
 }
