@@ -33,6 +33,24 @@ Télécharge la dernière version depuis les [releases](https://github.com/mathe
 
 <img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/craft-registration_terminal.png" alt="Craft du terminal d'inscription"/>
 
+## Thèmes inclus
+
+Pour changer de thème, accroupis-toi et fais un clic droit sur le terminal d'inscription, puis ouvre l'onglet **Thème**.
+
+<details>
+<summary><b>Glace & Feu</b> (par défaut)</summary>
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-ice_fire.png" alt="Fond du thème Glace & Feu"/>
+
+</details>
+
+<details>
+<summary><b>Couronne</b></summary>
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-couronne.png" alt="Fond du thème Couronne"/>
+
+</details>
+
 ## Datapack
 
 Tu peux créer tes propres thèmes d'écran avec un data pack : couleurs, place des Pokémon, portraits des dresseurs, images et textes. Tout est expliqué dans le [guide des data packs](docs/DATAPACK.fr.md).

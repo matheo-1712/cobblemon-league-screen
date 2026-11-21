@@ -33,6 +33,24 @@ Download the latest version from the [releases](https://github.com/matheo-1712/c
 
 <img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/craft-registration_terminal.png" alt="Registration Terminal recipe"/>
 
+## Built-in themes
+
+To change theme, sneak and right-click the registration terminal, then open the **Theme** tab.
+
+<details>
+<summary><b>Ice & Fire</b> (default)</summary>
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-ice_fire.png" alt="Ice & Fire theme background"/>
+
+</details>
+
+<details>
+<summary><b>Crown</b></summary>
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-couronne.png" alt="Crown theme background"/>
+
+</details>
+
 ## Data packs
 
 You can create your own screen themes with a data pack: colors, Pokémon placement, trainer portraits, images and texts. See the [data pack guide](https://github.com/matheo-1712/cobblemon-league-screen/blob/master/docs/DATAPACK.en.md).
