@@ -23,6 +23,20 @@ Cobblemon League Screen is an open source Minecraft mod which adds a screen to C
 
 Download the latest version from the [releases](https://github.com/matheo-1712/cobblemon-league-screen/releases) and drop the `.jar` into your `mods` folder.
 
+## Data packs
+
+You can create your own screen themes with a data pack: colors, Pokémon placement, trainer portraits, images and texts. See the [data pack guide](https://github.com/matheo-1712/cobblemon-league-screen/blob/master/docs/DATAPACK.en.md).
+
+This is where themes made by players will be listed, so you can change your screen's look without writing any.
+
+*No themes yet.*
+
+Made one you want listed? Open an [issue on GitHub](https://github.com/matheo-1712/cobblemon-league-screen/issues) with the link.
+
 ## License
 
 This project is licensed under the [MIT License](https://github.com/matheo-1712/cobblemon-league-screen/blob/master/LICENSE).
+
+## Contributors
+
+- [matheo-1712](https://github.com/matheo-1712)
