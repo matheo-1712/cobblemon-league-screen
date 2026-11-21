@@ -55,7 +55,10 @@ object BakedWalls {
     }
 
     private class Baked(val target: TextureTarget, val location: ResourceLocation) {
+        /** Ce que la texture montre ; nul tant qu'elle n'a jamais été dessinée. */
         var key: Key? = null
+        /** Ce qu'elle doit montrer au prochain [flush], si ce n'est pas déjà [key]. */
+        var pending: Key? = null
         var lastUsed = 0L
     }
 
@@ -74,10 +77,15 @@ object BakedWalls {
     private var lastSweep = 0L
 
     /**
-     * La texture du tableau de ce mur, redessinée si besoin. À appeler pendant le rendu du monde,
-     * sur le fil de rendu.
+     * La texture du tableau de ce mur, ou nul si elle n'a pas encore été dessinée. À appeler
+     * pendant le rendu du monde, sur le fil de rendu.
+     *
+     * Si le tableau a changé, il n'est pas redessiné ici mais au prochain [flush], hors du rendu du
+     * monde : pendant ce rendu, un pack de shaders (Iris) remplace les shaders du jeu par les siens,
+     * qui n'écrivent pas une image ordinaire, et repasse même une fois pour les ombres. En
+     * attendant, le mur garde l'image d'avant.
      */
-    fun textureFor(entity: ScreenBlockEntity, width: Int, height: Int, board: BoardState, theme: Theme): ResourceLocation {
+    fun textureFor(entity: ScreenBlockEntity, width: Int, height: Int, board: BoardState, theme: Theme): ResourceLocation? {
         val now = System.nanoTime()
         sweep(now)
 
@@ -99,11 +107,21 @@ object BakedWalls {
             baked[entity] = entry
         }
         entry.lastUsed = now
-        if (!key.same(entry.key)) {
-            bake(entry.target, width.toFloat(), height.toFloat(), board, theme)
+        entry.pending = if (key.same(entry.key)) null else key
+        return if (entry.key != null) entry.location else null
+    }
+
+    /**
+     * Redessine les tableaux qui ont changé. À appeler sur le fil de rendu, hors du rendu du monde
+     * (à chaque tick du client) : les shaders du jeu y sont ceux d'origine, même avec Iris.
+     */
+    fun flush() {
+        for (entry in baked.values) {
+            val key = entry.pending ?: continue
+            entry.pending = null
+            bake(entry.target, key.width.toFloat(), key.height.toFloat(), key.board, key.theme)
             entry.key = key
         }
-        return entry.location
     }
 
     /** Le mur s'est éteint : sa texture n'a plus lieu d'être. */
@@ -125,14 +143,27 @@ object BakedWalls {
     /** Dessine le tableau dans [target], puis rend la main au monde comme on l'a trouvé. */
     private fun bake(target: TextureTarget, width: Float, height: Float, board: BoardState, theme: Theme) {
         val buffers = MultiBufferSource.immediate(buffer)
-        // Le tampon d'image en cours n'est pas forcément celui de Minecraft (un pack de shaders a
-        // les siens) : on note lequel c'est, et sa zone d'affichage, pour les remettre ensuite.
-        val previousFramebuffer = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING)
+        // Les tampons d'image liés, et la zone d'affichage, pour les remettre ensuite.
+        val previousDraw = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING)
+        val previousRead = GL11.glGetInteger(GL30.GL_READ_FRAMEBUFFER_BINDING)
         val previousViewport = IntArray(4).also { GL11.glGetIntegerv(GL11.GL_VIEWPORT, it) }
 
-        target.setClearColor(0f, 0f, 0f, 0f)
-        target.clear(Minecraft.ON_OSX)
+        // Deux précautions pour Iris (pack de shaders), sans quoi le tableau partait sur l'écran du
+        // jeu au lieu de sa texture (mur vide ou abîmé) :
+        // - `bindWrite` lui dit que l'écran principal n'est plus la cible : il ne remplace les
+        //   shaders du jeu par ceux du pack que quand il croit dessiner à l'écran. Il le croit de
+        //   nouveau au prochain rendu du monde.
+        // - Puis on lie notre tampon directement : Iris garde en mémoire le tampon qu'il croit lié
+        //   et saute les liaisons qu'il juge inutiles ; or lui et le jeu en lient aussi sans le
+        //   prévenir, et sa mémoire peut dire « déjà lié » à tort.
+        // Le tableau n'utilise aussi que des rendus qui restent sur ce tampon (voir
+        // [WallCanvas.fill] et [FigurePainter]).
         target.bindWrite(true)
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, target.frameBufferId)
+        GlStateManager._viewport(0, 0, target.width, target.height)
+        RenderSystem.clearColor(0f, 0f, 0f, 0f)
+        RenderSystem.clearDepth(1.0)
+        RenderSystem.clear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX)
 
         RenderSystem.backupProjectionMatrix()
         // Le repère du mur : x vers la droite, y vers le haut, z vers le spectateur, en blocs.
@@ -153,7 +184,10 @@ object BakedWalls {
             modelView.popMatrix()
             RenderSystem.applyModelViewMatrix()
             RenderSystem.restoreProjectionMatrix()
-            GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, previousFramebuffer)
+            // Remis comme trouvés, toujours sans passer par la mémoire d'Iris : elle redevient
+            // juste (ou aussi fausse qu'avant, mais pas par notre faute).
+            GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, previousDraw)
+            GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, previousRead)
             GlStateManager._viewport(previousViewport[0], previousViewport[1], previousViewport[2], previousViewport[3])
         }
     }

@@ -40,6 +40,7 @@ object LeagueScreenClient : ClientModInitializer {
             context.client().setScreen(ThemeMenuScreen(payload.terminal, current, payload.arena, payload.facing, payload.walls))
         }
         linkTrainerSkins()
+        ClientTickEvents.END_CLIENT_TICK.register { BakedWalls.flush() }
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             val level = client.level ?: return@register
             if (level.gameTime % 10L != 0L) return@register

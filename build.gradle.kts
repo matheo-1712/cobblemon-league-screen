@@ -56,6 +56,13 @@ dependencies {
     // (ou derrière FabricLoader.isModLoaded) quand le mod est présent.
     modCompileOnly("maven.modrinth:khlinTrc:${providers.gradleProperty("cobblemon_trainers_version").get()}")
 
+    // Jeu de développement seulement (runClient) : jamais embarqué ni publié comme dépendance.
+    // Cobblemon Trainers, pour voir les skins des dresseurs ; Sodium et Iris, pour tester le mur
+    // avec un pack de shaders (à déposer dans run/shaderpacks).
+    modLocalRuntime("maven.modrinth:khlinTrc:${providers.gradleProperty("cobblemon_trainers_version").get()}")
+    modLocalRuntime("maven.modrinth:sodium:${providers.gradleProperty("sodium_version").get()}")
+    modLocalRuntime("maven.modrinth:iris:${providers.gradleProperty("iris_version").get()}")
+
     testImplementation(kotlin("test-junit"))
     testImplementation("junit:junit:${providers.gradleProperty("junit_version").get()}")
 }
@@ -86,6 +93,38 @@ dependencies {
     localRuntime(fileTree(cobblemonLibsDir) {
         include("*.jar")
         builtBy(cobblemonLibs)
+    })
+}
+
+/**
+ * Même chose pour Iris : sans les bibliothèques qu'il embarque, le jeu de dev plante dès qu'on
+ * ouvre la liste des packs de shaders (`ClassNotFoundException: org.anarres.cpp...`). Ses autres
+ * jars imbriqués sont des modules de Fabric API, déjà là.
+ */
+val irisArchive: Configuration by configurations.creating { isTransitive = false }
+
+dependencies {
+    irisArchive("maven.modrinth:iris:${providers.gradleProperty("iris_version").get()}")
+}
+
+val irisLibsDir = layout.buildDirectory.dir("iris-libs")
+
+val irisLibs = tasks.register<Sync>("irisLibs") {
+    description = "Extrait les bibliothèques imbriquées dans le jar d'Iris."
+    group = "fabric"
+
+    from(irisArchive.elements.map { archives -> archives.map { zipTree(it) } }) {
+        include("META-INF/jars/antlr4-runtime-*.jar", "META-INF/jars/glsl-transformer-*.jar", "META-INF/jars/jcpp-*.jar")
+        eachFile { relativePath = RelativePath(true, name) }
+    }
+    into(irisLibsDir)
+    includeEmptyDirs = false
+}
+
+dependencies {
+    localRuntime(fileTree(irisLibsDir) {
+        include("*.jar")
+        builtBy(irisLibs)
     })
 }
 
