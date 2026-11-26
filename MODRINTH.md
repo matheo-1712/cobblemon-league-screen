@@ -51,6 +51,13 @@ To change theme, sneak and right-click the registration terminal, then open the 
 
 </details>
 
+<details>
+<summary><b>Sun & Moon</b></summary>
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-soleil_lune.png" alt="Sun & Moon theme"/>
+
+</details>
+
 ## Data packs
 
 You can create your own screen themes with a data pack: colors, Pokémon placement, trainer portraits, images and texts. See the [data pack guide](https://github.com/matheo-1712/cobblemon-league-screen/blob/master/docs/DATAPACK.en.md).
