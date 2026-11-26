@@ -99,6 +99,7 @@ Les calques sont dessinés dans l'ordre de la liste : **le premier est derrière
 | `name` | `side`, `color`, `align` | Le nom du dresseur. |
 | `portrait` | `side`, `style`, `frame`, `fill`, `border`, `yaw`, `pitch` | Le dresseur (voir plus bas). |
 | `slot` | `side`, `index`, `style` | Une case de l'équipe (voir plus bas). |
+| `active` | `side`, `index`, `fit`, `block`, `yaw` | Le Pokémon sur le terrain, en grand (voir plus bas). |
 
 - `side` : `left`, `right`, ou `winner` (dans la scène `victory` seulement).
 - `align` : `left`, `center` (par défaut) ou `right`.
@@ -143,6 +144,17 @@ Chaque état est une liste d'images, centrées sur la case :
 ```
 
 `color` (blanc par défaut), `alpha` (1 par défaut) et `scale` (1 par défaut) sont optionnels.
+
+### Pokémon sur le terrain (`active`)
+
+Dessine en grand le Pokémon qu'un camp a sur le terrain, debout sur le bas de sa boîte, sans image de case : pratique pour le placer à côté de son dresseur. Rien n'est dessiné quand le camp n'a pas de Pokémon sur le terrain. `side` accepte aussi `winner` dans la scène de victoire.
+
+| Champ | Par défaut | Description |
+|---|---|---|
+| `index` | `1` | Lequel, en combat double ou triple (1 à 3). |
+| `fit` | `1` | Part de la boîte qu'il peut occuper. |
+| `block` | aucun | Pixels de maquette par bloc : le Pokémon prend sa taille du Pokédex (1 m = 1 bloc), sans dépasser la boîte. Un dresseur `figure` mesure 2,05 blocs : pour qu'ils soient à la même échelle, mets la hauteur de son portrait divisée par 2,05. Sans `block`, le Pokémon remplit la boîte. |
+| `yaw` | celui de `pokemon` | Rotation en degrés, vers le centre de l'écran. |
 
 ### Pokémon
 

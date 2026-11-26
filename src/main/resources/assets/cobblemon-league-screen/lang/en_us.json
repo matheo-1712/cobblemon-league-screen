@@ -15,6 +15,7 @@
   "board.cobblemon-league-screen.victory": "VICTORY",
   "theme.cobblemon-league-screen.couronne": "Crown",
   "theme.cobblemon-league-screen.glace_feu": "Ice & Fire",
+  "theme.cobblemon-league-screen.soleil_lune": "Sun & Moon",
   "message.cobblemon-league-screen.theme_applied": "Theme applied: %s",
   "message.cobblemon-league-screen.theme_unknown": "This theme no longer exists on the server",
   "message.cobblemon-league-screen.theme_too_far": "Too far from the terminal",

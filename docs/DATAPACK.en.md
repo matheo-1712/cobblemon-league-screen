@@ -99,6 +99,7 @@ Layers are drawn in list order: **the first one is at the back**. Each layer has
 | `name` | `side`, `color`, `align` | The trainer's name. |
 | `portrait` | `side`, `style`, `frame`, `fill`, `border`, `yaw`, `pitch` | The trainer (see below). |
 | `slot` | `side`, `index`, `style` | A team slot (see below). |
+| `active` | `side`, `index`, `fit`, `block`, `yaw` | The Pokémon on the field, drawn large (see below). |
 
 - `side`: `left`, `right`, or `winner` (in the `victory` scene only).
 - `align`: `left`, `center` (default) or `right`.
@@ -143,6 +144,17 @@ Each state is a list of images, centered on the slot:
 ```
 
 `color` (white by default), `alpha` (1 by default) and `scale` (1 by default) are optional.
+
+### Pokémon on the field (`active`)
+
+Draws the Pokémon a side has on the field, large, standing on the bottom of its box, without slot images: handy for placing it next to its trainer. Nothing is drawn when that side has no Pokémon on the field. `side` also accepts `winner` in the victory scene.
+
+| Field | Default | Description |
+|---|---|---|
+| `index` | `1` | Which one, in double or triple battles (1 to 3). |
+| `fit` | `1` | Share of the box it may take up. |
+| `block` | none | Canvas pixels per block: the Pokémon takes its Pokédex height (1 m = 1 block), without leaving the box. A `figure` trainer is 2.05 blocks tall: to put them on the same scale, use the portrait's height divided by 2.05. Without `block`, the Pokémon fills the box. |
+| `yaw` | the one from `pokemon` | Rotation in degrees, towards the center of the screen. |
 
 ### Pokémon
 

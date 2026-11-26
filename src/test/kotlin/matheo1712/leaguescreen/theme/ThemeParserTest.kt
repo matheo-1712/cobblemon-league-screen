@@ -198,4 +198,26 @@ class ThemeParserTest {
         assertTrue(ThemeParser.parse(id, "{ pas du json", null).isFailure)
         assertTrue(ThemeParser.parse(id, "[]", null).isFailure)
     }
+
+    @Test
+    fun `le calque active lit son camp, son rang et sa taille`() {
+        val theme = parse(
+            """{ "live": [ { "type": "active", "side": "left", "w": 200, "h": 200 },
+                           { "type": "active", "side": "right", "index": 2, "fit": 0.8, "block": 120, "yaw": 20, "w": 200, "h": 200 } ],
+                 "victory": [ { "type": "active", "side": "winner", "w": 200, "h": 200 } ] }""",
+        )
+        val left = assertIs<ActiveLayer>(theme.live[0])
+        assertEquals(SideRef.LEFT, left.side)
+        assertEquals(1, left.index)
+        assertEquals(1f, left.fit)
+        assertNull(left.yaw)
+        assertNull(left.block)
+        val right = assertIs<ActiveLayer>(theme.live[1])
+        assertEquals(2, right.index)
+        assertEquals(0.8f, right.fit)
+        assertEquals(20f, right.yaw)
+        assertEquals(120f, right.block)
+        assertEquals(SideRef.WINNER, assertIs<ActiveLayer>(theme.victory[0]).side)
+        assertTrue(failure("""{ "live": [ { "type": "active", "side": "left", "index": 4, "w": 1, "h": 1 } ] }""").startsWith("live[0].index"))
+    }
 }

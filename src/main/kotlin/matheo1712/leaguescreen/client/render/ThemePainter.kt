@@ -7,6 +7,7 @@ import matheo1712.leaguescreen.board.Phase
 import matheo1712.leaguescreen.board.SideView
 import matheo1712.leaguescreen.board.SlotState
 import matheo1712.leaguescreen.screen.Frame
+import matheo1712.leaguescreen.theme.ActiveLayer
 import matheo1712.leaguescreen.theme.FillLayer
 import matheo1712.leaguescreen.theme.ImageLayer
 import matheo1712.leaguescreen.theme.Layer
@@ -100,7 +101,26 @@ object ThemePainter {
                     )
                 }
                 is SlotLayer -> slot(layer, box, z)
+                is ActiveLayer -> active(layer, box, z)
             }
+        }
+
+        fun active(layer: ActiveLayer, box: Frame, z: Float) {
+            val (side, view) = sideOf(layer.side) ?: return
+            val slot = view.slots.filter { it.state == SlotState.ACTIVE }.getOrNull(layer.index - 1) ?: return
+            val species = slot.species?.let(ResourceLocation::tryParse) ?: return
+            val yaw = layer.yaw ?: theme.pokemon.yaw
+            // Repère du mur : `y` vers le haut, le bas de la boîte est donc box.y.
+            PokemonModels.drawStanding(
+                canvas.pose, canvas.buffers, species, slot.aspects,
+                box.x + box.width / 2, box.y, z, box.width * layer.fit, box.height * layer.fit,
+                layer.block?.let { it * unit },
+                // Vu en jeu : un yaw positif tourne le modèle vers l'extérieur pour le camp de gauche.
+                // On l'inverse pour qu'il regarde, comme documenté, vers le centre (l'adversaire).
+                if (side == SideRef.LEFT) -yaw else yaw,
+                Colors.fade(Colors.WHITE, layer.alpha),
+                theme.pokemon.depth, partialTick, WallCanvas.LIGHT,
+            )
         }
 
         /** Le camp désigné par un calque, `winner` ramené à gauche ou droite. */

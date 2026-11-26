@@ -164,6 +164,18 @@ object ThemeParser {
                     if (index !in 1..6) fail("$path.index", "de 1 à 6")
                     SlotLayer(box, alpha, it, index, o.get("style")?.let { s -> slotStyles(s, "$path.style") })
                 }
+                "active" -> side()?.let {
+                    val index = o.get("index")?.let { i -> number(i, "$path.index").toInt() } ?: 1
+                    if (index !in 1..3) fail("$path.index", "de 1 à 3")
+                    ActiveLayer(
+                        box, alpha, it, index,
+                        yaw = o.get("yaw")?.let { y -> number(y, "$path.yaw") },
+                        fit = o.get("fit")?.let { f -> number(f, "$path.fit") } ?: 1f,
+                        block = o.get("block")?.let { b ->
+                            number(b, "$path.block").takeIf { v -> v > 0f } ?: fail("$path.block", "nombre positif attendu")
+                        },
+                    )
+                }
                 else -> {
                     warnings += "$path : type de calque inconnu « $type », calque ignoré"
                     null
