@@ -61,6 +61,18 @@ data class SlotLayer(
 ) : Layer
 
 /**
+ * Le Pokémon n° [index] (1, ou 2 en combat double) parmi ceux d'un camp sur le terrain, en grand,
+ * debout sur le bas de sa boîte, sans image de case. Rien n'est dessiné quand ce camp n'a pas de
+ * Pokémon sur le terrain. [yaw] remplace celui de `pokemon` (`null` : le même) ; [fit] réduit la
+ * place qu'il peut prendre dans la boîte. Avec [block] (pixels de maquette par bloc), il prend
+ * sa taille du Pokédex (1 m = 1 bloc), sans dépasser la boîte.
+ */
+data class ActiveLayer(
+    override val box: Box, override val alpha: Float,
+    val side: SideRef, val index: Int, val yaw: Float?, val fit: Float, val block: Float? = null,
+) : Layer
+
+/**
  * Un thème d'écran, tel que lu dans `data/<ns>/leaguescreen/themes/<chemin>.json`.
  *
  * [warnings] liste ce qui a été ignoré sans rendre le thème inutilisable (un type de calque

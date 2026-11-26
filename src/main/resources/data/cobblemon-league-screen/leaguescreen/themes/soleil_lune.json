@@ -1,0 +1,423 @@
+{
+  "name": "theme.cobblemon-league-screen.soleil_lune",
+  "canvas": [
+    1600,
+    900
+  ],
+  "background": "#0E0B1F",
+  "victoryBackground": "@side:0.45",
+  "colors": {
+    "left": "#FF9F1C",
+    "right": "#8B5CF6",
+    "accent": "#FFD23F"
+  },
+  "pokemon": {
+    "fit": 0.85,
+    "yaw": 35,
+    "depth": 0.15,
+    "fainted": "#4A4A4A"
+  },
+  "slots": {
+    "empty": [],
+    "hidden": [
+      {
+        "image": "cobblemon:textures/item/poke_balls/poke_ball.png",
+        "scale": 0.62
+      }
+    ],
+    "bench": [
+      {
+        "image": "cobblemon-league-screen:textures/board/circle.png",
+        "color": "#000000",
+        "alpha": 0.35
+      }
+    ],
+    "active": [
+      {
+        "image": "cobblemon-league-screen:textures/board/halo.png",
+        "color": "@side",
+        "scale": 1.6
+      },
+      {
+        "image": "cobblemon-league-screen:textures/board/circle.png",
+        "color": "#000000",
+        "alpha": 0.35
+      }
+    ],
+    "fainted": [
+      {
+        "image": "cobblemon-league-screen:textures/board/circle.png",
+        "color": "#000000",
+        "alpha": 0.55
+      }
+    ]
+  },
+  "live": [
+    {
+      "type": "fill",
+      "color": "#3A1A08",
+      "x": 0,
+      "y": 0,
+      "w": 800,
+      "h": 900
+    },
+    {
+      "type": "fill",
+      "color": "#120F33",
+      "x": 800,
+      "y": 0,
+      "w": 800,
+      "h": 900
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/background-soleil-lune.png",
+      "x": 0,
+      "y": 0,
+      "w": 1600,
+      "h": 900
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/vs-mc.png",
+      "x": 684,
+      "y": 356,
+      "w": 233,
+      "h": 168
+    },
+    {
+      "type": "slot",
+      "side": "left",
+      "index": 1,
+      "x": 20,
+      "y": 200,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "left",
+      "index": 2,
+      "x": 20,
+      "y": 296,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "left",
+      "index": 3,
+      "x": 20,
+      "y": 392,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "left",
+      "index": 4,
+      "x": 20,
+      "y": 488,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "left",
+      "index": 5,
+      "x": 20,
+      "y": 584,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "left",
+      "index": 6,
+      "x": 20,
+      "y": 680,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "right",
+      "index": 1,
+      "x": 1496,
+      "y": 200,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "right",
+      "index": 2,
+      "x": 1496,
+      "y": 296,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "right",
+      "index": 3,
+      "x": 1496,
+      "y": 392,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "right",
+      "index": 4,
+      "x": 1496,
+      "y": 488,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "right",
+      "index": 5,
+      "x": 1496,
+      "y": 584,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "slot",
+      "side": "right",
+      "index": 6,
+      "x": 1496,
+      "y": 680,
+      "w": 84,
+      "h": 84
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/circle.png",
+      "color": "#000000",
+      "alpha": 0.3,
+      "x": 135,
+      "y": 702,
+      "w": 180,
+      "h": 36
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/circle.png",
+      "color": "#000000",
+      "alpha": 0.3,
+      "x": 385,
+      "y": 700,
+      "w": 250,
+      "h": 40
+    },
+    {
+      "type": "portrait",
+      "side": "left",
+      "style": "figure",
+      "frame": "#00000000",
+      "fill": "#00000000",
+      "border": 0,
+      "yaw": 30,
+      "x": 110,
+      "y": 290,
+      "w": 230,
+      "h": 430
+    },
+    {
+      "type": "active",
+      "side": "left",
+      "yaw": 30,
+      "block": 209,
+      "x": 330,
+      "y": 210,
+      "w": 360,
+      "h": 510
+    },
+    {
+      "type": "fill",
+      "color": "#000000",
+      "alpha": 0.45,
+      "x": 120,
+      "y": 740,
+      "w": 560,
+      "h": 52
+    },
+    {
+      "type": "name",
+      "side": "left",
+      "align": "left",
+      "x": 144,
+      "y": 742,
+      "w": 512,
+      "h": 48
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/circle.png",
+      "color": "#000000",
+      "alpha": 0.3,
+      "x": 1285,
+      "y": 702,
+      "w": 180,
+      "h": 36
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/circle.png",
+      "color": "#000000",
+      "alpha": 0.3,
+      "x": 965,
+      "y": 700,
+      "w": 250,
+      "h": 40
+    },
+    {
+      "type": "portrait",
+      "side": "right",
+      "style": "figure",
+      "frame": "#00000000",
+      "fill": "#00000000",
+      "border": 0,
+      "yaw": 30,
+      "x": 1260,
+      "y": 290,
+      "w": 230,
+      "h": 430
+    },
+    {
+      "type": "active",
+      "side": "right",
+      "yaw": 30,
+      "block": 209,
+      "x": 910,
+      "y": 210,
+      "w": 360,
+      "h": 510
+    },
+    {
+      "type": "fill",
+      "color": "#000000",
+      "alpha": 0.45,
+      "x": 920,
+      "y": 740,
+      "w": 560,
+      "h": 52
+    },
+    {
+      "type": "name",
+      "side": "right",
+      "align": "right",
+      "x": 944,
+      "y": 742,
+      "w": 512,
+      "h": 48
+    }
+  ],
+  "victory": [
+    {
+      "type": "fill",
+      "color": "#3A1A08",
+      "x": 0,
+      "y": 0,
+      "w": 800,
+      "h": 900
+    },
+    {
+      "type": "fill",
+      "color": "#120F33",
+      "x": 800,
+      "y": 0,
+      "w": 800,
+      "h": 900
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/background-soleil-lune.png",
+      "x": 0,
+      "y": 0,
+      "w": 1600,
+      "h": 900
+    },
+    {
+      "type": "fill",
+      "color": "#000000",
+      "alpha": 0.55,
+      "x": 0,
+      "y": 0,
+      "w": 1600,
+      "h": 900
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/circle.png",
+      "color": "#000000",
+      "alpha": 0.35,
+      "x": 560,
+      "y": 612,
+      "w": 180,
+      "h": 40
+    },
+    {
+      "type": "image",
+      "image": "cobblemon-league-screen:textures/board/circle.png",
+      "color": "#000000",
+      "alpha": 0.35,
+      "x": 865,
+      "y": 610,
+      "w": 250,
+      "h": 44
+    },
+    {
+      "type": "portrait",
+      "side": "winner",
+      "style": "figure",
+      "frame": "#00000000",
+      "fill": "#00000000",
+      "border": 0,
+      "yaw": 20,
+      "x": 520,
+      "y": 110,
+      "w": 260,
+      "h": 520
+    },
+    {
+      "type": "active",
+      "side": "winner",
+      "yaw": 20,
+      "block": 236,
+      "x": 780,
+      "y": 150,
+      "w": 420,
+      "h": 480
+    },
+    {
+      "type": "fill",
+      "color": "#000000",
+      "alpha": 0.5,
+      "x": 400,
+      "y": 648,
+      "w": 800,
+      "h": 70
+    },
+    {
+      "type": "name",
+      "side": "winner",
+      "x": 400,
+      "y": 650,
+      "w": 800,
+      "h": 66
+    },
+    {
+      "type": "text",
+      "value": "board.cobblemon-league-screen.victory",
+      "color": "@accent",
+      "x": 200,
+      "y": 728,
+      "w": 1200,
+      "h": 110
+    }
+  ]
+}

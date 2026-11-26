@@ -37,7 +37,13 @@ object PokemonModels {
     private data class Key(val species: ResourceLocation, val aspects: Set<String>, val yaw: Float)
 
     /** La boîte du modèle tourné, dans l'espace où il est mesuré (`y` vers le bas, comme dans un menu). */
-    private class Measure(val extent: Float, val centerX: Float, val centerY: Float, val minZ: Float)
+    private class Measure(
+        val extent: Float, val centerX: Float, val centerY: Float, val minZ: Float,
+        val width: Float, val height: Float, val bottom: Float,
+    )
+
+    /** Où et à quelle échelle poser un modèle mesuré : l'échelle, puis le point d'origine du modèle. */
+    private class Placement(val scale: Float, val x: Float, val y: Float)
 
     private val states = hashMapOf<Key, FloatingState>()
     private val measures = hashMapOf<Key, Measure>()
@@ -55,15 +61,59 @@ object PokemonModels {
         species: ResourceLocation, aspects: Set<String>,
         cx: Float, cy: Float, z: Float, size: Float, yaw: Float, argb: Int,
         depth: Float, partialTick: Float, light: Int,
+    ): Boolean = render(
+        pose, buffers, species, aspects, z, yaw, argb, depth, partialTick, light,
+        spriteBox = { _ -> SpriteBox(cx, cy, size) },
+    ) { m, _ ->
+        val scale = size / m.extent
+        Placement(scale, cx - m.centerX * scale, cy + m.centerY * scale)
+    }
+
+    /**
+     * Dessine le Pokémon debout : les pieds sur [bottom], centré sur [cx], sans dépasser [maxWidth]
+     * ni [maxHeight]. Avec [unitsPerBlock] (unités du repère par bloc), il prend sa taille du
+     * Pokédex (1 m = 1 bloc), pour se tenir à l'échelle d'un dresseur dessiné avec la même valeur ;
+     * sinon il remplit la place. Les modèles de Cobblemon ne sont pas à la même échelle d'une
+     * espèce à l'autre : c'est la taille du Pokédex qui les compare justement.
+     */
+    fun drawStanding(
+        pose: PoseStack, buffers: MultiBufferSource,
+        species: ResourceLocation, aspects: Set<String>,
+        cx: Float, bottom: Float, z: Float, maxWidth: Float, maxHeight: Float, unitsPerBlock: Float?,
+        yaw: Float, argb: Int, depth: Float, partialTick: Float, light: Int,
+    ): Boolean = render(
+        pose, buffers, species, aspects, z, yaw, argb, depth, partialTick, light,
+        spriteBox = { meters ->
+            val side = minOf(maxWidth, maxHeight, unitsPerBlock?.let { it * meters } ?: Float.MAX_VALUE)
+            SpriteBox(cx, bottom + side / 2, side)
+        },
+    ) { m, meters ->
+        var scale = minOf(maxWidth / m.width, maxHeight / m.height)
+        if (unitsPerBlock != null) scale = minOf(scale, unitsPerBlock * meters / m.height)
+        // L'espace mesuré a `y` vers le bas : son bas ([Measure.bottom]) se pose sur [bottom].
+        Placement(scale, cx - m.centerX * scale, bottom + m.bottom * scale)
+    }
+
+    private class SpriteBox(val cx: Float, val cy: Float, val size: Float)
+
+    private fun render(
+        pose: PoseStack, buffers: MultiBufferSource,
+        species: ResourceLocation, aspects: Set<String>,
+        z: Float, yaw: Float, argb: Int, depth: Float, partialTick: Float, light: Int,
+        spriteBox: (meters: Float) -> SpriteBox,
+        place: (Measure, meters: Float) -> Placement,
     ): Boolean {
         val key = Key(species, aspects, yaw)
         if (key in failed) return false
         val form = PokemonSpecies.getByIdentifier(species)?.getForm(aspects) ?: return false.also { failed += key }
 
+        // La taille du Pokédex, en décimètres ; jamais nulle, pour ne pas faire disparaître le modèle.
+        val meters = (form.height / 10f).takeIf { it > 0f } ?: 1f
         val state = states.getOrPut(key) { FloatingState().also { it.currentAspects = aspects } }
         val sprite = VaryingModelRepository.getSprite(species, state, SpriteType.PROFILE)
         if (sprite != null) {
-            sprite(pose, buffers, sprite, cx, cy, z, size, argb, light)
+            val box = spriteBox(meters)
+            sprite(pose, buffers, sprite, box.cx, box.cy, z, box.size, argb, light)
             return true
         }
 
@@ -97,18 +147,15 @@ object PokemonModels {
                         failed += key
                         return false
                     }
-                    Measure(bounds.extent, bounds.centerX, bounds.centerY, bounds.minZ)
+                    Measure(bounds.extent, bounds.centerX, bounds.centerY, bounds.minZ, bounds.width, bounds.height, bounds.maxY)
                 }
-                val scale = size / measure.extent
+                val placement = place(measure, meters)
+                val scale = placement.scale
 
                 pose.pushPose()
                 // L'espace mesuré a `y` vers le bas : le retourner revient à mettre (s, -s, -s·D),
                 // ce qui garde l'orientation des faces (déterminant positif).
-                pose.translate(
-                    cx - measure.centerX * scale,
-                    cy + measure.centerY * scale,
-                    z - measure.minZ * scale * depth,
-                )
+                pose.translate(placement.x, placement.y, z - measure.minZ * scale * depth)
                 pose.scale(scale, -scale, -scale * depth)
                 pose.mulPose(rotation)
                 val buffer = buffers.getBuffer(RenderType.entityCutout(texture))
@@ -155,11 +202,14 @@ object PokemonModels {
         var minZ = Float.POSITIVE_INFINITY
             private set
         private var maxX = Float.NEGATIVE_INFINITY
-        private var maxY = Float.NEGATIVE_INFINITY
+        var maxY = Float.NEGATIVE_INFINITY
+            private set
 
         val centerX get() = (minX + maxX) / 2f
         val centerY get() = (minY + maxY) / 2f
         val extent get() = maxOf(maxX - minX, maxY - minY)
+        val width get() = maxX - minX
+        val height get() = maxY - minY
 
         override fun addVertex(x: Float, y: Float, z: Float): VertexConsumer {
             minX = minOf(minX, x)
