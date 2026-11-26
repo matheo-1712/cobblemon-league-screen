@@ -54,7 +54,7 @@ To change theme, sneak and right-click the registration terminal, then open the 
 <details>
 <summary><b>Sun & Moon</b></summary>
 
-<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-soleil_lune.png" alt="Sun & Moon theme"/>
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-soleil_lune.png" alt="Sun & Moon theme background"/>
 
 </details>
 
