@@ -51,6 +51,15 @@ Pour changer de thème, accroupis-toi et fais un clic droit sur le terminal d'in
 
 </details>
 
+<details>
+<summary><b>Soleil & Lune</b></summary>
+
+Le jour contre la nuit : chaque dresseur se tient à côté de son Pokémon sur le terrain, à sa taille réelle, et son équipe longe le bord de l'écran.
+
+<img src="https://raw.githubusercontent.com/matheo-1712/cobblemon-league-screen/refs/heads/master/media/theme-sun_moon.png" alt="Fond du thème Soleil & Lune"/>
+
+</details>
+
 ## Datapack
 
 Tu peux créer tes propres thèmes d'écran avec un data pack : couleurs, place des Pokémon, portraits des dresseurs, images et textes. Tout est expliqué dans le [guide des data packs](docs/DATAPACK.fr.md).
